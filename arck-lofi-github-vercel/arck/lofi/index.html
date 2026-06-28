@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARCK Energy — Investor Site (Lo-fi Wireframe)</title>
+<style>
+  :root{
+    --ink:#ececec;
+    --ink-2:#a6a6a6;
+    --ink-3:#6f7174;
+    --line:#3a3d42;
+    --line-2:#26282b;
+    --fill:#1c1f23;
+    --fill-2:#191b1e;
+    --paper:#141619;
+    --surface:#1b1e21;
+    --mono:'SF Mono','JetBrains Mono','Roboto Mono',ui-monospace,Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:var(--sans);
+    color:var(--ink);
+    background:var(--paper);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---------- wireframe primitives ---------- */
+  .wrap{max-width:1180px;margin:0 auto;padding:0 32px;}
+  .sec{border-bottom:1px solid var(--line-2);position:relative;}
+  .sec-inner{padding:68px 0;}
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink-3);margin-bottom:18px;
+  }
+  h1,h2,h3{font-weight:600;color:var(--ink);letter-spacing:-.01em;}
+  h1{font-size:clamp(32px,4.8vw,56px);line-height:1.06;}
+  h2{font-size:clamp(24px,3vw,36px);line-height:1.14;}
+  h3{font-size:18px;}
+  p{color:var(--ink-2);}
+  em{color:var(--ink);font-style:italic;}
+  .lead{font-size:clamp(16px,1.6vw,20px);color:var(--ink-2);max-width:60ch;}
+
+  .imgbox{
+    background-color:var(--fill);
+    background-image:
+      linear-gradient(to top right, transparent calc(50% - 0.5px), var(--line) calc(50% - 0.5px), var(--line) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
+      linear-gradient(to top left, transparent calc(50% - 0.5px), var(--line) calc(50% - 0.5px), var(--line) calc(50% + 0.5px), transparent calc(50% + 0.5px));
+    border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;text-align:center;
+    color:var(--ink-3);font-family:var(--mono);font-size:12px;letter-spacing:.04em;
+    padding:18px;border-radius:2px;
+  }
+  .imgbox span{background:var(--fill);padding:6px 12px;border:1px solid var(--line);border-radius:2px;line-height:1.5;}
+
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:var(--sans);font-size:14px;font-weight:500;
+    padding:11px 20px;border-radius:3px;border:1px solid var(--ink);
+    background:var(--ink);color:var(--paper);cursor:default;white-space:nowrap;text-decoration:none;
+  }
+  .btn.ghost{background:transparent;color:var(--ink);}
+  .btn.sm{padding:9px 16px;font-size:13px;}
+
+  .card{border:1px solid var(--line);border-radius:4px;background:var(--surface);padding:26px;}
+  .card h3{margin-bottom:8px;}
+  .card p{font-size:14.5px;}
+
+  .chip{
+    display:inline-flex;align-items:center;gap:6px;
+    font-family:var(--mono);font-size:12px;color:var(--ink-2);
+    border:1px solid var(--line);border-radius:999px;padding:6px 12px;background:var(--surface);
+  }
+
+  /* ---------- page nav + dropdown ---------- */
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0;}
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit;cursor:pointer;}
+  .brand .mono-mark{
+    width:38px;height:38px;border:1.5px solid var(--ink);border-radius:4px;
+    display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;letter-spacing:-.02em;
+  }
+  .brand .name{font-weight:600;font-size:15px;letter-spacing:.01em;}
+  .navlinks{display:flex;gap:26px;align-items:center;}
+  .navlinks > a{font-size:14px;color:var(--ink-2);text-decoration:none;}
+  .navlinks > a:hover{color:var(--ink);}
+  .nav-cta{display:flex;gap:10px;align-items:center;}
+
+  /* technology mega-menu (full-width) */
+  .navitem{position:static;}
+  .navitem > .toplink{
+    font-size:14px;color:var(--ink-2);text-decoration:none;cursor:default;
+    display:inline-flex;align-items:center;gap:6px;padding:6px 0;
+  }
+  .navitem > .toplink .car{color:var(--ink-2);transition:transform .18s ease,color .15s ease;flex:none;display:block;}
+  .navitem:hover > .toplink,.navitem:focus-within > .toplink{color:var(--ink);}
+  .navitem:hover > .toplink .car,.navitem:focus-within > .toplink .car{transform:rotate(180deg);color:var(--ink);}
+  .megamenu{
+    position:absolute;left:0;right:0;top:100%;
+    background:var(--surface);border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    box-shadow:0 22px 44px -18px rgba(0,0,0,.55);
+    opacity:0;visibility:hidden;pointer-events:none;transform:translateY(-6px);
+    transition:opacity .16s ease,transform .16s ease;z-index:120;
+  }
+  .navitem:hover .megamenu,.navitem:focus-within .megamenu{opacity:1;visibility:visible;pointer-events:auto;transform:translateY(0);}
+  .megamenu::before{content:"";position:absolute;top:-26px;left:0;right:0;height:26px;}
+  .mega-inner{padding:30px 0 34px;}
+  .mega-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:18px;}
+  .mega-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+  .mega-item{display:flex;gap:18px;align-items:center;padding:16px;border:1px solid var(--line-2);border-radius:8px;text-decoration:none;background:var(--paper);transition:border-color .14s ease,background .14s ease;}
+  .mega-item:hover{border-color:var(--ink-3);background:var(--fill);}
+  .mega-thumb{width:104px;height:72px;flex:none;border-radius:5px;}
+  .mega-name{font-weight:600;font-size:15.5px;color:var(--ink);margin-bottom:4px;}
+  .mega-desc{font-size:13px;color:var(--ink-2);line-height:1.5;}
+
+  /* ---------- views ---------- */
+  .stage{display:none;}
+  .stage.on{display:block;}
+
+  /* ---------- hero ---------- */
+  .hero{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center;padding:58px 0 28px;}
+  .hero-actions{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap;}
+  .hero-visual{aspect-ratio:1/.9;min-height:300px;}
+  .band-inner{padding:8px 0 60px;}
+  .proof{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--line);border-radius:4px;overflow:hidden;background:var(--surface);}
+  .proof .pcell{padding:26px 28px;border-right:1px solid var(--line-2);}
+  .proof .pcell:last-child{border-right:none;}
+  .proof .pv{font-size:30px;font-weight:600;letter-spacing:-.02em;line-height:1;}
+  .proof .pl{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.06em;margin-top:10px;}
+
+  /* ---------- stat band ---------- */
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--line);border-radius:4px;overflow:hidden;background:var(--surface);}
+  .stat{padding:28px 26px;border-right:1px solid var(--line-2);}
+  .stat:last-child{border-right:none;}
+  .stat .num{font-size:38px;font-weight:600;letter-spacing:-.02em;line-height:1;}
+  .stat .lbl{font-family:var(--mono);font-size:12px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.07em;margin-top:10px;}
+
+  /* ---------- grids ---------- */
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:32px;}
+  .kicker-mark{font-family:var(--mono);font-size:12px;color:var(--ink-3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px;}
+  .head-block{max-width:66ch;}
+  .head-block p{margin-top:14px;}
+
+  /* pain points row */
+  .pains{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:34px;}
+  .pain{border:1px solid var(--line);border-radius:4px;background:var(--surface);padding:22px;position:relative;}
+  .pain .pn{font-family:var(--mono);font-size:12px;color:var(--ink-3);margin-bottom:12px;}
+  .pain b{display:block;color:var(--ink);font-size:15px;margin-bottom:7px;letter-spacing:-.01em;}
+  .pain p{font-size:13.5px;}
+
+  /* benefit row (action-verb led) */
+  .benefits{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:30px;}
+  .benefit{border:1px dashed var(--line);border-radius:4px;background:var(--fill-2);padding:20px;}
+  .benefit .bverb{font-weight:600;color:var(--ink);font-size:15px;}
+  .benefit p{font-size:13.5px;margin-top:6px;}
+
+  /* ---------- cost comparison (economics signature) ---------- */
+  .compare{margin-top:34px;border:1px solid var(--line);border-radius:5px;background:var(--surface);padding:30px 28px;}
+  .crow{display:grid;grid-template-columns:170px 1fr 92px;align-items:center;gap:18px;padding:14px 0;border-bottom:1px solid var(--line-2);}
+  .crow:last-of-type{border-bottom:none;}
+  .crow .clbl{font-size:14px;color:var(--ink-2);}
+  .crow .clbl b{display:block;color:var(--ink);}
+  .ctrack{height:26px;background:var(--fill);border:1px solid var(--line-2);border-radius:3px;position:relative;overflow:hidden;}
+  .cbar{position:absolute;left:0;top:0;bottom:0;background:repeating-linear-gradient(45deg,var(--line) 0 6px,var(--fill-2) 6px 12px);border-right:1px solid var(--ink-3);}
+  .crow.best .cbar{background:var(--ink);border-right:none;}
+  .cval{font-family:var(--mono);font-size:15px;color:var(--ink);text-align:right;font-weight:600;}
+  .cnote{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-top:14px;letter-spacing:.04em;}
+
+  /* ---------- four-layer architecture stack (signature system diagram) ---------- */
+  .stack{margin-top:34px;border:1px solid var(--line);border-radius:5px;overflow:hidden;background:var(--surface);}
+  .layer{display:grid;grid-template-columns:54px 1fr 196px 150px;align-items:center;gap:22px;padding:24px 26px;border-bottom:1px solid var(--line-2);position:relative;text-decoration:none;}
+  .layer:last-of-type{border-bottom:none;}
+  .layer:hover{background:var(--fill);}
+  .layer .lnum{font-family:var(--mono);font-size:13px;color:var(--ink-3);}
+  .layer .lname{font-weight:600;font-size:16px;color:var(--ink);}
+  .layer .lrole{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px;}
+  .layer .ldesc{font-size:13.5px;color:var(--ink-2);margin-top:4px;}
+  .layer .liso{min-height:90px;}
+  .layer .llink{font-family:var(--mono);font-size:12px;color:var(--ink-2);border:1px solid var(--line);border-radius:3px;padding:8px 10px;text-align:center;white-space:nowrap;}
+  .layer:hover .llink{color:var(--ink);border-color:var(--ink-3);}
+  .stack-cap{font-family:var(--mono);font-size:11px;color:var(--ink-3);letter-spacing:.05em;padding:14px 26px;background:var(--fill-2);border-top:1px solid var(--line-2);}
+
+  /* moat pillars */
+  .pillars{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:28px;}
+  .pillar{border:1px solid var(--line);border-radius:4px;background:var(--surface);padding:22px;}
+  .pillar .kicker-mark{margin-bottom:10px;}
+  .pillar h3{font-size:16px;margin-bottom:6px;}
+  .pillar p{font-size:13px;}
+
+  /* outcome chips */
+  .outcomes{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px;}
+
+  /* timeline */
+  .timeline{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:34px;}
+  .tstep{border:1px solid var(--line);border-radius:4px;background:var(--surface);padding:22px;position:relative;}
+  .tstate{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px;}
+  .tstep h3{font-size:16px;margin-bottom:6px;}
+  .tstep p{font-size:13.5px;}
+  .timeline .tstep:not(:last-child)::after{content:"→";position:absolute;right:-13px;top:50%;transform:translateY(-50%);color:var(--ink-3);font-size:16px;z-index:2;}
+
+  /* split / feature */
+  .split{display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center;}
+
+  /* close CTA */
+  .closecta{text-align:center;max-width:62ch;margin:0 auto;}
+  .closecta .hero-actions{justify-content:center;}
+
+  /* ---------- product: full-width "why" band + how-it-works accordion ---------- */
+  .wide-visual{margin-top:32px;width:100%;aspect-ratio:16/6;min-height:200px;}
+  .howacc{display:grid;grid-template-columns:1fr 1.1fr;gap:48px;margin-top:34px;align-items:start;}
+  .howacc-list{border-top:1px solid var(--line);}
+  .acc-item{border-bottom:1px solid var(--line);}
+  .acc-head{width:100%;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:24px 0;text-align:left;font-family:var(--sans);color:inherit;}
+  .acc-title{font-size:18px;font-weight:600;color:var(--ink-3);letter-spacing:-.01em;transition:color .15s ease;}
+  .acc-head:hover .acc-title{color:var(--ink-2);}
+  .acc-item.open .acc-title{color:var(--ink);}
+  .acc-sign{font-family:var(--mono);font-size:20px;color:var(--ink-3);font-weight:400;line-height:1;flex:none;transition:color .15s ease;}
+  .acc-item.open .acc-sign{color:var(--ink);}
+  .acc-body{max-height:0;overflow:hidden;transition:max-height .32s ease;}
+  .acc-item.open .acc-body{max-height:240px;}
+  .acc-body p{font-size:15px;color:var(--ink-2);line-height:1.6;max-width:46ch;padding-bottom:26px;}
+  .howacc-visual{position:relative;min-height:380px;}
+  .acc-vis{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .3s ease;}
+  .acc-vis.on{opacity:1;visibility:visible;}
+
+  /* ---------- technology subpage ---------- */
+  .crumb{font-family:var(--mono);font-size:12px;color:var(--ink-3);letter-spacing:.04em;display:flex;gap:8px;align-items:center;}
+  .crumb a{color:var(--ink-3);text-decoration:none;}
+  .crumb a:hover{color:var(--ink-2);}
+  .sub-hero{display:grid;grid-template-columns:1fr .95fr;gap:46px;align-items:center;padding:46px 0 30px;}
+  .spec{border:1px solid var(--line);border-radius:5px;overflow:hidden;background:var(--surface);margin-top:34px;}
+  .specrow{display:grid;grid-template-columns:240px 1fr;gap:20px;padding:16px 24px;border-bottom:1px solid var(--line-2);align-items:baseline;}
+  .specrow:last-child{border-bottom:none;}
+  .specrow .sk{font-family:var(--mono);font-size:12px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.06em;}
+  .specrow .sv{font-size:14.5px;color:var(--ink);}
+  .specrow .sv span{color:var(--ink-2);}
+  /* platform locator */
+  .locator{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--line);border-radius:5px;overflow:hidden;background:var(--surface);margin-top:34px;}
+  .loc{padding:18px 16px;border-right:1px solid var(--line-2);position:relative;text-decoration:none;color:inherit;display:block;}
+  .loc:hover{background:var(--fill);}
+  .loc:last-child{border-right:none;}
+  .loc .ln{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-bottom:8px;}
+  .loc h4{font-size:13.5px;color:var(--ink-2);font-weight:600;}
+  .loc.here{background:var(--fill);}
+  .loc.here h4{color:var(--ink);}
+  .loc:not(:last-child)::before{content:"→";position:absolute;right:-8px;top:20px;color:var(--ink-3);font-size:13px;z-index:2;background:var(--surface);}
+  .subnav{display:flex;justify-content:space-between;gap:14px;margin-top:40px;flex-wrap:wrap;}
+  .subnav a{font-family:var(--mono);font-size:13px;color:var(--ink-2);text-decoration:none;border:1px solid var(--line);border-radius:4px;padding:12px 16px;}
+  .subnav a:hover{color:var(--ink);border-color:var(--ink-3);}
+
+  /* ---------- about page ---------- */
+  .about-hero{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center;padding:54px 0 36px;}
+
+  .mv{display:grid;grid-template-columns:1fr 1fr;gap:40px;}
+  .mv-col{border-top:2px solid var(--ink);padding-top:22px;}
+  .mv-col .eyebrow{margin-bottom:16px;}
+  .mv-statement{font-size:clamp(20px,2.2vw,26px);font-weight:600;color:var(--ink);line-height:1.24;letter-spacing:-.01em;}
+  .mv-col p{font-size:15px;margin-top:16px;}
+
+  .vtimeline{margin-top:36px;border-top:1px solid var(--line-2);}
+  .vt{display:grid;grid-template-columns:150px 1fr;gap:30px;padding:22px 0;border-bottom:1px solid var(--line-2);}
+  .vt-when{font-family:var(--mono);font-size:13px;color:var(--ink);letter-spacing:.03em;padding-top:2px;}
+  .vt-body h3{font-size:17px;margin-bottom:6px;}
+  .vt-body p{font-size:14px;max-width:62ch;}
+
+  .team{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:36px;}
+  .member{border:1px solid var(--line);border-radius:5px;background:var(--surface);overflow:hidden;}
+  .member .photo{aspect-ratio:4/3;border:none;border-bottom:1px solid var(--line);border-radius:0;}
+  .member .minfo{padding:20px 22px;}
+  .member .mname{font-weight:600;font-size:16px;color:var(--ink);}
+  .member .mrole{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.06em;margin:6px 0 12px;}
+  .member .mbio{font-size:13.5px;color:var(--ink-2);line-height:1.55;}
+
+  .contact{display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:start;}
+  .contact-detail{border:1px solid var(--line);border-radius:5px;overflow:hidden;background:var(--surface);}
+  .cd-row{display:grid;grid-template-columns:140px 1fr;gap:18px;padding:18px 22px;border-bottom:1px solid var(--line-2);align-items:baseline;}
+  .cd-row:last-child{border-bottom:none;}
+  .cd-row .ck{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.06em;}
+  .cd-row .cv{font-size:14.5px;color:var(--ink);}
+  .cd-row .cv .ph{color:var(--ink-3);font-style:italic;}
+
+  /* footer */
+  .foot{background:var(--surface);border-top:1px solid var(--line);}
+  .foot-inner{padding:54px 0 30px;display:grid;grid-template-columns:1.4fr repeat(2,1fr);gap:30px;}
+  .foot p{font-size:13px;}
+  .foot .col h4{font-family:var(--mono);font-size:11px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px;}
+  .foot .col a{display:block;font-size:13.5px;color:var(--ink-2);text-decoration:none;margin-bottom:9px;}
+  .foot-bottom{border-top:1px solid var(--line-2);padding:18px 0;font-family:var(--mono);font-size:11.5px;color:var(--ink-3);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+
+  /* responsive */
+  @media (max-width:900px){
+    .wrap{padding:0 20px;}
+    .sec-inner{padding:50px 0;}
+    .navlinks{display:none;}
+    .hero,.sub-hero{grid-template-columns:1fr;gap:32px;padding:34px 0 30px;}
+    .hero-visual{min-height:230px;}
+    .stats,.grid3,.pains,.benefits,.pillars,.timeline,.proof,.locator{grid-template-columns:1fr;}
+    .stat,.proof .pcell,.loc{border-right:none;border-bottom:1px solid var(--line-2);}
+    .stat:last-child,.proof .pcell:last-child,.loc:last-child{border-bottom:none;}
+    .timeline .tstep:not(:last-child)::after,.loc:not(:last-child)::before{content:"↓";right:50%;top:auto;bottom:-13px;transform:translateX(50%);}
+    .layer{grid-template-columns:40px 1fr;gap:14px;}
+    .layer .liso,.layer .llink{grid-column:2;width:100%;}
+    .crow{grid-template-columns:120px 1fr 68px;gap:12px;}
+    .split{grid-template-columns:1fr;gap:28px;}
+    .specrow{grid-template-columns:1fr;gap:6px;}
+    .foot-inner{grid-template-columns:1fr 1fr;}
+    .about-hero,.mv,.team,.contact{grid-template-columns:1fr;gap:28px;}
+    .vt,.cd-row{grid-template-columns:1fr;gap:6px;}
+    .howacc{grid-template-columns:1fr;gap:24px;}
+    .howacc-visual{min-height:280px;}
+  }
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto;}}
+</style>
+</head>
+<body>
+
+<!-- ============ NAV (with Technology dropdown) ============ -->
+<header class="sec">
+  <div class="wrap">
+    <nav class="nav">
+      <a class="brand" href="#" data-go="home">
+        <div class="mono-mark">ARCK</div>
+        <span class="name">ARCK Energy</span>
+      </a>
+      <div class="navlinks">
+        <div class="navitem">
+          <a href="#" class="toplink">Technology <svg class="car" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></a>
+          <div class="megamenu">
+            <div class="wrap"><div class="mega-inner">
+              <div class="mega-eyebrow">The CoolEnergy™ platform</div>
+              <div class="mega-grid">
+                <a class="mega-item" href="#" data-go="pem">
+                  <div class="mega-thumb imgbox"><span>thumb</span></div>
+                  <div><div class="mega-name">PEM+ Membrane</div><div class="mega-desc">The low-temperature, high-efficiency proton-exchange foundation.</div></div>
+                </a>
+                <a class="mega-item" href="#" data-go="afc">
+                  <div class="mega-thumb imgbox"><span>thumb</span></div>
+                  <div><div class="mega-name">Advanced Fuel Cell (AFC)</div><div class="mega-desc">A cool-running cell that makes electricity, not waste heat.</div></div>
+                </a>
+                <a class="mega-item" href="#" data-go="ibfc">
+                  <div class="mega-thumb imgbox"><span>thumb</span></div>
+                  <div><div class="mega-name">Intelligent Buffered Fuel Cell (iBFC)</div><div class="mega-desc">The world's first self-recharging battery — stable, 24/7 output.</div></div>
+                </a>
+                <a class="mega-item" href="#" data-go="ebank">
+                  <div class="mega-thumb imgbox"><span>thumb</span></div>
+                  <div><div class="mega-name">CoolEnergy™ Energy Bank</div><div class="mega-desc">The integrated system: make, store solid-state, and use hydrogen on-site.</div></div>
+                </a>
+              </div>
+            </div></div>
+          </div>
+        </div>
+        <a href="#" data-go="about">About</a>
+      </div>
+      <div class="nav-cta">
+        <span class="btn ghost sm">Get in touch</span>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<!-- ============================================================= -->
+<!-- ============ VIEW: LANDING PAGE ============================ -->
+<!-- ============================================================= -->
+<div class="stage on" data-opt="home">
+
+  <!-- 1 · HERO -->
+  <section class="sec" style="border-bottom:none;">
+    <div class="wrap">
+      <div class="hero">
+        <div>
+          <div class="eyebrow">Hydrogen power · infrastructure-grade · off-grid</div>
+          <h1>The end of grid dependence.</h1>
+          <p class="lead" style="margin-top:22px;">Clean, continuous electricity from hydrogen — generated on-site, 24/7, at a third of grid cost.</p>
+          <div class="hero-actions">
+            <span class="btn">Get in touch</span>
+          </div>
+        </div>
+        <div class="hero-visual imgbox">
+          <span>HERO VISUAL — ABSTRACT<br>"Future + Natural" signature motif<br>(hydrogen / energy flow as something<br>between particle &amp; natural light)<br>— illustration, NOT stock photo</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HERO METRICS BAND — full-width -->
+  <section class="sec">
+    <div class="wrap"><div class="band-inner">
+      <div class="proof">
+        <div class="pcell"><div class="pv">$0.08<span style="font-size:15px;color:var(--ink-3);">/kWh</span></div><div class="pl">≈ ⅓ of grid cost</div></div>
+        <div class="pcell"><div class="pv">24/7</div><div class="pl">Continuous generation</div></div>
+        <div class="pcell"><div class="pv">85%</div><div class="pl">Fuel-cell efficiency</div></div>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- 2 · PROBLEM & PAIN POINTS -->
+  <section class="sec" style="background:var(--fill-2);">
+    <div class="wrap"><div class="sec-inner">
+      <div class="head-block" style="max-width:74ch;">
+        <div class="eyebrow">The challenge today</div>
+        <h2>Power is getting scarcer, dirtier, and more expensive.</h2>
+        <p>Demand is exploding — driven by AI — while the grid strains and today's clean options fall short. Hydrogen could fill the gap, but storing and using it efficiently has always been the obstacle.</p>
+      </div>
+      <div class="pains">
+        <div class="pain">
+          <div class="pn">Pain 01</div>
+          <b>The grid can't keep up</b>
+          <p>Grid power runs $0.20–$0.30/kWh and climbing, outages are rising, and AI data-center demand is growing 30–35%+ a year — behind multi-year interconnection queues.</p>
+        </div>
+        <div class="pain">
+          <div class="pn">Pain 02</div>
+          <b>Clean options fall short</b>
+          <p>Batteries store a fixed charge and deplete. Conventional "hot" fuel cells waste much of their energy as heat, degrade over time, and land near $0.52/kWh.</p>
+        </div>
+        <div class="pain">
+          <div class="pn">Pain 03</div>
+          <b>Hydrogen stays locked away</b>
+          <p>Compressed and liquid hydrogen are costly, energy-hungry to store, and carry a heavy safety profile — which is why clean hydrogen has stayed "ten years away."</p>
+        </div>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- 3 · THE REFRAME -->
+  <section class="sec">
+    <div class="wrap"><div class="sec-inner">
+      <div class="split">
+        <div>
+          <div class="eyebrow">The breakthrough</div>
+          <h2>What if hydrogen <em>was</em> the storage?</h2>
+          <p class="lead" style="margin-top:18px;">Hydrogen becomes its own storage, held safely in solid state, inside a fuel cell that runs cool instead of hot. The result is a continuous power source that keeps producing — not a battery that depletes.</p>
+        </div>
+        <div class="hero-visual imgbox" style="aspect-ratio:1/.82;min-height:260px;">
+          <span>CONCEPT DIAGRAM<br>store-and-deplete (battery) +<br>hot cell wasting heat<br>vs. continuous, cool generation (ARCK)<br>— simple, abstract contrast</span>
+        </div>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- 4 · SOLUTION OVERVIEW — THE PLATFORM -->
+  <section class="sec" style="background:var(--fill-2);">
+    <div class="wrap"><div class="sec-inner">
+      <div class="head-block">
+        <div class="eyebrow">The CoolEnergy™ platform</div>
+        <h2>One integrated system, built from the membrane up.</h2>
+        <p>Three patented innovations — the PEM+ membrane, the Advanced Fuel Cell, and the Intelligent Buffered Fuel Cell — combine into one deployable system. Each is a product in its own right, with its own page below.</p>
+      </div>
+
+      <div class="benefits">
+        <div class="benefit"><div class="bverb">Generates continuously</div><p>Infrastructure-grade power 24/7 — a source that keeps producing, not duration-limited storage.</p></div>
+        <div class="benefit"><div class="bverb">Runs cool &amp; efficient</div><p>~85% efficiency at low temperature, making dense urban deployment viable.</p></div>
+        <div class="benefit"><div class="bverb">Deploys anywhere</div><p>Modular, retrofit-ready, with solid-state hydrogen storage and a propane-class safety profile.</p></div>
+      </div>
+
+      <div class="stack">
+        <a class="layer" href="#" data-go="pem">
+          <div class="lnum">01</div>
+          <div><div class="lrole">Innovation · IP</div><div class="lname">PEM+ Membrane</div><div class="ldesc">Advanced proton-exchange membrane — the foundation that makes high-efficiency, low-temperature operation possible.</div></div>
+          <div class="liso imgbox"><span>isometric<br>line illustration</span></div>
+          <div class="llink">PEM+ Membrane →</div>
+        </a>
+        <a class="layer" href="#" data-go="afc">
+          <div class="lnum">02</div>
+          <div><div class="lrole">Innovation · IP</div><div class="lname">Advanced Fuel Cell (AFC)</div><div class="ldesc">A cool-running µstack cell that converts hydrogen into clean electricity instead of waste heat.</div></div>
+          <div class="liso imgbox"><span>isometric<br>line illustration</span></div>
+          <div class="llink">Advanced Fuel Cell →</div>
+        </a>
+        <a class="layer" href="#" data-go="ibfc">
+          <div class="lnum">03</div>
+          <div><div class="lrole">Innovation · IP</div><div class="lname">Intelligent Buffered Fuel Cell (iBFC)</div><div class="ldesc">Intelligent power electronics buffer demand swings and hold output stable — the world's first self-recharging battery.</div></div>
+          <div class="liso imgbox"><span>isometric<br>line illustration</span></div>
+          <div class="llink">iBFC →</div>
+        </a>
+        <a class="layer" href="#" data-go="ebank">
+          <div class="lnum">04</div>
+          <div><div class="lrole">Integrated system · product</div><div class="lname">CoolEnergy™ Energy Bank</div><div class="ldesc">The complete on-site system — make, store solid-state, and use hydrogen. Modular and retrofit-ready, in EnergyBank / PowerBlade / PowerStack form factors.</div></div>
+          <div class="liso imgbox"><span>isometric<br>line illustration</span></div>
+          <div class="llink">Energy Bank →</div>
+        </a>
+        <div class="stack-cap">Click any layer → its Technology page · the architecture is the product nav</div>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- 5 · THE ECONOMICS + MOAT -->
+  <section class="sec">
+    <div class="wrap"><div class="sec-inner">
+      <div class="head-block">
+        <div class="eyebrow">The economics</div>
+        <h2>The cost advantage isn't incremental. It's structural.</h2>
+        <p>Continuous generation instead of store-and-deplete collapses the cost per kilowatt-hour — an advantage rooted in physics, not a temporary lead.</p>
+      </div>
+      <div class="compare">
+        <div class="crow">
+          <div class="clbl"><b>Legacy fuel cells</b>conventional, hot-running</div>
+          <div class="ctrack"><div class="cbar" style="width:100%;"></div></div>
+          <div class="cval">$0.52</div>
+        </div>
+        <div class="crow">
+          <div class="clbl"><b>Utility grid</b>U.S. average</div>
+          <div class="ctrack"><div class="cbar" style="width:48%;"></div></div>
+          <div class="cval">$0.20–0.30</div>
+        </div>
+        <div class="crow best">
+          <div class="clbl"><b>ARCK</b>on-site, continuous</div>
+          <div class="ctrack"><div class="cbar" style="width:15%;"></div></div>
+          <div class="cval">$0.08</div>
+        </div>
+        <div class="cnote">↓ lower is better · cost per kWh</div>
+      </div>
+      <div class="pillars">
+        <div class="pillar"><div class="kicker-mark">Economics</div><h3>≈ $0.08 / kWh</h3><p>Roughly a third of grid cost and a fraction of legacy fuel cells. The gap is structural.</p></div>
+        <div class="pillar"><div class="kicker-mark">Continuous</div><h3>24/7 generation</h3><p>A source that keeps producing — hydrogen is the storage, so there's no fixed charge to deplete.</p></div>
+        <div class="pillar"><div class="kicker-mark">Efficiency</div><h3>Runs cool, ~85%</h3><p>Low-temperature operation turns more hydrogen into electricity — and unlocks dense urban sites.</p></div>
+        <div class="pillar"><div class="kicker-mark">Safety &amp; deploy</div><h3>Solid-state storage</h3><p>Propane-class risk profile, modular and retrofit-ready — drop-in to existing facilities.</p></div>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- 6 · THE PRIZE -->
+  <section class="sec" style="background:var(--fill-2);">
+    <div class="wrap"><div class="sec-inner">
+      <div class="head-block">
+        <div class="eyebrow">The market</div>
+        <h2>A $5 trillion shift to on-site power.</h2>
+        <p>AI data centers, enterprises, and municipalities all need continuous off-grid power the grid can't deliver — and ARCK's cost advantage points straight at it.</p>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="num">$5T+</div><div class="lbl">U.S. distributed power · next 5 yrs</div></div>
+        <div class="stat"><div class="num">30–35%</div><div class="lbl">AI data-center demand growth / yr</div></div>
+        <div class="stat"><div class="num">3 sectors</div><div class="lbl">Data centers · enterprise · municipal</div></div>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- 7 · TRACTION -->
+  <section class="sec">
+    <div class="wrap"><div class="sec-inner">
+      <div class="head-block">
+        <div class="eyebrow">Traction</div>
+        <h2>Shipping today. Scaling tomorrow.</h2>
+      </div>
+      <div class="timeline">
+        <div class="tstep"><div class="tstate">Released</div><h3>EnergyCube™</h3><p>First product released — the platform proven in the field, not a slide-deck prototype.</p></div>
+        <div class="tstep"><div class="tstate">Piloting · this year</div><h3>PowerBlade™</h3><p>Go-to-market platform entering pilot deployments now.</p></div>
+        <div class="tstep"><div class="tstate">Q1 2027</div><h3>Commercial launch</h3><p>Full commercial availability targeted for early 2027.</p></div>
+      </div>
+      <div class="grid3">
+        <div class="card"><h3>Independently validated</h3><p>Evaluated by a U.S. university and assessed by prospective buyers in Japan, South Korea, and Taiwan.</p></div>
+        <div class="card"><h3>Patented IP</h3><p>Three patented innovations — PEM+ membrane, Advanced Fuel Cell, and Intelligent Buffered Fuel Cell.</p></div>
+        <div class="card"><h3>Team &amp; advisors</h3><p>Founders and operators across hydrogen, power electronics, IP, and manufacturing scale-up.</p></div>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- 8 · VISION + CLOSE -->
+  <section class="sec" style="background:var(--fill-2);">
+    <div class="wrap"><div class="sec-inner">
+      <div class="split" style="margin-bottom:42px;">
+        <div class="hero-visual imgbox" style="aspect-ratio:1/.8;min-height:260px;">
+          <span>FULL VISION ILLUSTRATION<br>energy autonomy at scale —<br>the most expansive "Future + Natural"<br>composition on the site</span>
+        </div>
+        <div>
+          <div class="eyebrow">The vision</div>
+          <h2>Energy autonomy, at every scale.</h2>
+          <p class="lead" style="margin-top:18px;">From data centers and municipalities today to enterprises and homes tomorrow — clean power, generated where it's used. Not a backup solution, but next-generation infrastructure.</p>
+        </div>
+      </div>
+      <div class="closecta">
+        <div class="eyebrow">Get in touch</div>
+        <h2>There's a lot more to show you.</h2>
+        <p class="lead" style="margin:14px auto 0;">Explore how the platform works, or start a conversation — we'd be glad to walk you through it.</p>
+        <div class="hero-actions">
+          <span class="btn">Explore the technology →</span>
+          <span class="btn ghost">Start a conversation</span>
+        </div>
+      </div>
+    </div></div>
+  </section>
+
+</div><!-- /view: landing -->
+
+<!-- ============================================================= -->
+<!-- ============ VIEW: PRODUCT 01 — PEM+ MEMBRANE ============== -->
+<!-- ============================================================= -->
+<div class="stage" data-opt="pem">
+
+  <section class="sec">
+    <div class="wrap">
+      <div class="sub-hero">
+        <div>
+          <div class="crumb"><a href="#" data-go="home">Technology</a> <span>/</span> <span style="color:var(--ink-2);">PEM+ Membrane</span></div>
+          <div class="eyebrow" style="margin:18px 0 4px;">Innovation 01 · The foundation</div>
+          <h1>PEM+ Membrane.</h1>
+          <p class="lead" style="margin-top:18px;">The heart of every fuel cell, redesigned — moving energy with less waste and far more durability, so the whole platform can run cool and efficient.</p>
+        </div>
+        <div class="hero-visual imgbox" style="min-height:300px;">
+          <span>PRODUCT HERO ILLUSTRATION<br>isometric cutaway of the PEM+ membrane —<br>microporous ionomer with internal<br>reinforcing pillars (cool tones, warm accent)</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" style="background:var(--fill-2);">
+    <div class="wrap"><div class="sec-inner">
+      <div class="head-block" style="max-width:74ch;">
+        <div class="eyebrow">Why it matters</div>
+        <h2>Most fuel cells wear out from the inside.</h2>
+        <p class="lead" style="margin-top:16px;">Inside every fuel cell, a thin membrane carries hydrogen's energy into electricity — but run it hard or hot and it swells and cracks. That's the number-one reason fuel cells wear out and stay too costly to be practical.</p>
+      </div>
+      <div class="wide-visual imgbox"><span>COMPARISON — a conventional membrane swelling and cracking under stress vs. the PEM+ staying stable (wide, abstract)</span></div>
+    </div></div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap"><div class="sec-inner">
+      <div class="head-block">
+        <div class="eyebrow">How it works</div>
+        <h2>Charge moves through; the structure holds firm.</h2>
+        <p style="margin-top:14px;">Three things happen at once, every moment the cell runs.</p>
+      </div>
+      <div class="howacc">
+        <div class="howacc-list">
+          <div class="acc-item open">
+            <button class="acc-head" type="button"><span class="acc-title">Hydrogen arrives</span><span class="acc-sign">−</span></button>
+            <div class="acc-body"><p>Hydrogen meets the membrane surface and splits, freeing the charged particles that carry its energy across.</p></div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-head" type="button"><span class="acc-title">Charge crosses — cool</span><span class="acc-sign">+</span></button>
+            <div class="acc-body"><p>The microporous ionomer passes that charge with very low resistance, wasting little as heat. That's the root of the efficiency.</p></div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-head" type="button"><span class="acc-title">The structure holds</span><span class="acc-sign">+</span></button>
+            <div class="acc-body"><p>Built-in reinforcing pillars keep the membrane stable under load, resisting the swelling and cracking that wear cells out.</p></div>
+          </div>
+        </div>
+        <div class="howacc-visual">
+          <div class="acc-vis imgbox on"><span>STEP 1 — hydrogen splitting at the membrane<br>surface, charged particles released</span></div>
+          <div class="acc-vis imgbox"><span>STEP 2 — charge crossing the microporous<br>ionomer with low resistance (little heat)</span></div>
+          <div class="acc-vis imgbox"><span>STEP 3 — reinforcing pillars holding the<br>membrane stable under load</span></div>
+        </div>
+      </div>
+    </div></div>
+  </section>
+
+  <section class="sec" style="background:var(--fill-2);">
+    <div class="wrap"><div class="sec-inner">
+      <div class="head-block"><div class="eyebrow">What makes it different</div><h2>Why the membrane is the moat.</h2></div>
+      <div class="grid3">
+        <div class="card"><div class="kicker-mark">Efficiency</div><h3>Less wasted energy</h3><p>Lower internal resistance means more of the hydrogen becomes electricity, not heat — a key reason the system reaches up to 85% efficiency.</p></div>
+        <div class="card"><div class="kicker-mark">Durability</div><h3>Built to last</h3><p>A reinforced structure controls the swelling and cracking that shorten the life of conventional membranes.</p></div>
+        <div class="card"><div class="kicker-mark">Defensibility</div><h3>Deep patent moat</h3><p>PEM+ is protected by an extensive IP portfolio — over 2,300 pages of patents filed internationally.</p></div>
+      </div>
+    </div></div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap"><div class="sec-inner">
+      <div class="head-block"><div class="eyebrow">At a glance</div><h2>The essentials.</h2></div>
+      <div class="spec">
+        <div class="specrow"><div class="sk">What it is</div><div class="sv">Next-generation PEM+ ionomeric membrane <span>(proton exchange).</span></div></div>
+        <div class="specrow"><div class="sk">What it does</div><div class="sv">Carries charge with low resistance <span>— less energy lost as heat.</span></div></div>
+        <div class="specrow"><div class="sk">Durability</div><div class="sv">Reinforced "pillar" structure controls swelling <span>for long cycle life.</span></div></div>
+        <div class="specrow"><div class="sk">Efficiency enabled</div><div class="sv">Up to 85% system efficiency <span>(vs ~45–65% for conventional PEM).</span></div></div>
+        <div class="specrow"><div class="sk">Temperature enabled</div><div class="sv">20–65°C operation <span>(vs 80–140°C for conventional PEM).</span></div></div>
+        <div class="specrow"><div class="sk">Intellectual property</div><div class="sv">2,300+ pages of patents <span>filed internationally.</span></div></div>
+      </div>
+    </div></div>
+  </section>
+
+  <section class="sec" style="background:var(--fill-2);">
+    <div class="wrap"><div class="sec-inner">
+      <div class="head-block"><div class="eyebrow">Where it fits</div><h2>One part of the whole platform.</h2></div>
+      <div class="locator">
+        <a class="loc here" href="#" data-go="pem"><div class="ln">01</div><h4>PEM+ Membrane</h4></a>
+        <a class="loc" href="#" data-go="afc"><div class="ln">02</div><h4>Advanced Fuel Cell</h4></a>
+        <a class="loc" href="#" data-go="ibfc"><div class="ln">03</div><h4>Intelligent Buffered Fuel Cell</h4></a>
+        <a class="loc" href="#" data-go="ebank"><div class="ln">04</div><h4>CoolEnergy™ Energy Bank</h4></a>
+      </div>
+      <div class="subnav">
+        <a href="#" data-go="home">← Platform overview</a>
+        <a href="#" data-go="afc">Advanced Fuel Cell →</a>
+      </div>
+    </div></div>
+  </section>
+
+</div><!-- /product 01 -->
+
+<!-- ============================================================= -->
+<!-- ============ VIEW: PRODUCT 02 — ADVANCED FUEL CELL ========= -->
+<!-- ============================================================= -->
+<div class="stage" data-opt="afc">
+
+  <section class="sec">
+    <div class="wrap">
+      <div class="sub-hero">
+        <div>
+          <div class="crumb"><a href="#" data-go="home">Technology</a> <span>/</span> <span style="color:var(--ink-2);">Advanced Fuel Cell</span></div>
+          <div class="eyebrow" style="margin:18px 0 4px;">Innovation 02 · The engine</div>
+          <h1>Advanced Fuel Cell.</h1>
+          <p class="lead" style="margin-top:18px;">The world's first fuel cell that runs cool — spreading the work across thin micro-stacks so more hydrogen becomes electricity, not heat.</p>
+        </div>
+        <div class="hero-visual imgbox" style="min-height:300px;">
+          <span>PRODUCT HERO ILLUSTRATION<br>isometric of the CoolEnergy™ µStack /<br>Advanced Fuel Cell — low-profile<br>stacked micro-cells (cool tones, warm accent)</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" style="background:var(--fill-2);">
+    <div class="wrap"><div class="sec-inner">
+      <div class="head-block" style="max-width:74ch;">
+        <div class="eyebrow">Why it matters</div>
+        <h2>Conventional fuel cells run too hot to be useful.</h2>
+        <p class="lead" style="margin-top:16px;">Most fuel cells stack into a tall tower that traps heat in the center, reaching 100°C to 1,000°C. That heat is wasted energy — it degrades the cell, demands heavy cooling, and is a fire risk, keeping fuel cells out of homes, offices, and cities.</p>
+      </div>
+      <div class="wide-visual imgbox"><span>COMPARISON — a tall "hot" stack with heat concentrated in the center vs. ARCK's low-profile micro-stacks spreading heat out (wide, heat-map style)</span></div>
+    </div></div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap"><div class="sec-inner">
+      <div class="head-block">
+        <div class="eyebrow">How it works</div>
+        <h2>It comes down to geometry.</h2>
+        <p style="margin-top:14px;">Spread the work out, and the heat goes away.</p>
+      </div>
+      <div class="howacc">
+        <div class="howacc-list">
+          <div class="acc-item open">
+            <button class="acc-head" type="button"><span class="acc-title">Spread the work</span><span class="acc-sign">−</span></button>
+            <div class="acc-body"><p>Instead of one tall tower, the cell uses many thin micro-stacks (µStacks), distributing the load so heat never concentrates.</p></div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-head" type="button"><span class="acc-title">Pull heat away</span><span class="acc-sign">+</span></button>
+            <div class="acc-body"><p>Each µStack conducts heat outward, so the cell runs around 50°C — closer to warm than hot, with almost no cooling needed.</p></div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-head" type="button"><span class="acc-title">More power, less fuel</span><span class="acc-sign">+</span></button>
+            <div class="acc-body"><p>Because little energy is lost as heat, up to 85% becomes electricity — using about 30% less hydrogen than a hot cell.</p></div>
+          </div>
+        </div>
+        <div class="howacc-visual">
+          <div class="acc-vis imgbox on"><span>STEP 1 — many thin µStacks replacing one<br>tall tower (load distributed evenly)</span></div>
+          <div class="acc-vis imgbox"><span>STEP 2 — heat conducting outward,<br>cell running cool at ~50°C</span></div>
+          <div class="acc-vis imgbox"><span>STEP 3 — up to 85% to electricity,<br>~30% less hydrogen used</span></div>
+        </div>
+      </div>
+    </div></div>
+  </section>
+
+  <section class="sec" style="background:var(--fill-2);">
+    <div class="wrap"><div class="sec-inner">
+      <div class="head-block"><div class="eyebrow">What makes it different</div><h2>Cooler is the whole point.</h2></div>
+      <div class="grid3">
+        <div class="card"><div class="kicker-mark">Efficiency</div><h3>Up to 85%</h3><p>About 40% more efficient than conventional PEM fuel cells — more electricity from every gram of hydrogen.</p></div>
+        <div class="card"><div class="kicker-mark">Heat</div><h3>17–33× less heat</h3><p>Runs near room temperature (~50°C), so it needs almost no cooling and carries no fire risk.</p></div>
+        <div class="card"><div class="kicker-mark">Deployment</div><h3>Goes anywhere</h3><p>Cool, quiet, clean operation makes it safe for homes, offices, and dense urban sites where hot cells can't go.</p></div>
+      </div>
+    </div></div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap"><div class="sec-inner">
+      <div class="head-block"><div class="eyebrow">At a glance</div><h2>The essentials.</h2></div>
+      <div class="spec">
+        <div class="specrow"><div class="sk">What it is</div><div class="sv">CoolEnergy™ µStack <span>— a low-temperature Advanced Fuel Cell built on the PEM+ membrane.</span></div></div>
+        <div class="specrow"><div class="sk">Efficiency</div><div class="sv">Up to 85% <span>(≈40% higher than conventional PEM fuel cells).</span></div></div>
+        <div class="specrow"><div class="sk">Operating temperature</div><div class="sv">40–65°C, typically ~50°C <span>(vs 100–1,000°C for hot cells).</span></div></div>
+        <div class="specrow"><div class="sk">Heat output</div><div class="sv">17–33× less heat <span>than a conventional fuel cell.</span></div></div>
+        <div class="specrow"><div class="sk">Hydrogen use</div><div class="sv">~30% less <span>than a hot cell for the same power.</span></div></div>
+        <div class="specrow"><div class="sk">Safety</div><div class="sv">Fire-safe, minimal cooling <span>— no fumes or toxins.</span></div></div>
+      </div>
+    </div></div>
+  </section>
+
+  <section class="sec" style="background:var(--fill-2);">
+    <div class="wrap"><div class="sec-inner">
+      <div class="head-block"><div class="eyebrow">Where it fits</div><h2>One part of the whole platform.</h2></div>
+      <div class="locator">
+        <a class="loc" href="#" data-go="pem"><div class="ln">01</div><h4>PEM+ Membrane</h4></a>
+        <a class="loc here" href="#" data-go="afc"><div class="ln">02</div><h4>Advanced Fuel Cell</h4></a>
+        <a class="loc" href="#" data-go="ibfc"><div class="ln">03</div><h4>Intelligent Buffered Fuel Cell</h4></a>
+        <a class="loc" href="#" data-go="ebank"><div class="ln">04</div><h4>CoolEnergy™ Energy Bank</h4></a>
+      </div>
+      <div class="subnav">
+        <a href="#" data-go="pem">← PEM+ Membrane</a>
+        <a href="#" data-go="ibfc">Intelligent Buffered Fuel Cell →</a>
+      </div>
+    </div></div>
+  </section>
+
+</div><!-- /product 02 -->
+
+<!-- ============================================================= -->
+<!-- ====== VIEW: PRODUCT 03 — INTELLIGENT BUFFERED FUEL CELL === -->
+<!-- ============================================================= -->
+<div class="stage" data-opt="ibfc">
+
+  <section class="sec">
+    <div class="wrap">
+      <div class="sub-hero">
+        <div>
+          <div class="crumb"><a href="#" data-go="home">Technology</a> <span>/</span> <span style="color:var(--ink-2);">Intelligent Buffered Fuel Cell</span></div>
+          <div class="eyebrow" style="margin:18px 0 4px;">Innovation 03 · The intelligence</div>
+          <h1>Intelligent Buffered Fuel Cell.</h1>
+          <p class="lead" style="margin-top:18px;">The world's first self-recharging battery — smart electronics let the fuel cell run steady while a built-in buffer handles every surge, keeping power stable 24/7.</p>
+        </div>
+        <div class="hero-visual imgbox" style="min-height:300px;">
+          <span>PRODUCT HERO ILLUSTRATION<br>isometric cutaway of the iBFC —<br>fuel cell + battery buffer + intelligent<br>charge-transfer electronics (cool tones, warm accent)</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" style="background:var(--fill-2);">
+    <div class="wrap"><div class="sec-inner">
+      <div class="head-block" style="max-width:74ch;">
+        <div class="eyebrow">Why it matters</div>
+        <h2>Real power demand is bursty. Fuel cells hate that.</h2>
+        <p class="lead" style="margin-top:16px;">Real demand is bursty — an AC kicks on, a server spikes — but fuel cells can't follow sudden swings without their efficiency collapsing (from 84% to 32%) and overheating. That gap is what's kept fuel cells stuck in the lab.</p>
+      </div>
+      <div class="wide-visual imgbox"><span>DIAGRAM — direct drive: load spikes force the fuel cell's current to swing, efficiency crashing from 84% to 32% (wide, a jagged unstable line)</span></div>
+    </div></div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap"><div class="sec-inner">
+      <div class="head-block">
+        <div class="eyebrow">How it works</div>
+        <h2>A battery that recharges itself.</h2>
+        <p style="margin-top:14px;">The fuel cell never powers your devices directly — here's the trick.</p>
+      </div>
+      <div class="howacc">
+        <div class="howacc-list">
+          <div class="acc-item open">
+            <button class="acc-head" type="button"><span class="acc-title">Charge</span><span class="acc-sign">−</span></button>
+            <div class="acc-body"><p>The fuel cell runs at its steady, efficient best, quietly charging a built-in battery — the buffer — like a thermostat that tops up only when needed.</p></div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-head" type="button"><span class="acc-title">Deliver</span><span class="acc-sign">+</span></button>
+            <div class="acc-body"><p>The buffer powers your devices and absorbs every spike, so the fuel cell never has to chase sudden demand.</p></div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-head" type="button"><span class="acc-title">Surge &amp; restore</span><span class="acc-sign">+</span></button>
+            <div class="acc-body"><p>When a big load hits, the buffer delivers up to 6 kW on demand — then the fuel cell quietly recharges it.</p></div>
+          </div>
+        </div>
+        <div class="howacc-visual">
+          <div class="acc-vis imgbox on"><span>STEP 1 — the fuel cell charging the<br>buffer at a steady, efficient rate</span></div>
+          <div class="acc-vis imgbox"><span>STEP 2 — the buffer powering the load<br>and absorbing demand spikes</span></div>
+          <div class="acc-vis imgbox"><span>STEP 3 — a 6 kW surge delivered on demand,<br>then the cell recharging the buffer</span></div>
+        </div>
+      </div>
+    </div></div>
+  </section>
+
+  <section class="sec" style="background:var(--fill-2);">
+    <div class="wrap"><div class="sec-inner">
+      <div class="head-block"><div class="eyebrow">What makes it different</div><h2>Not a fuel cell. Not a battery. Both.</h2></div>
+      <div class="grid3">
+        <div class="card"><div class="kicker-mark">Stability</div><h3>Steady 85%, always</h3><p>The fuel cell stays at peak efficiency no matter how demand swings — instead of crashing under load.</p></div>
+        <div class="card"><div class="kicker-mark">Power-on-demand</div><h3>Surges on tap</h3><p>Delivers up to 6 kW for an hour to handle real-world spikes, then quietly recharges itself.</p></div>
+        <div class="card"><div class="kicker-mark">New category</div><h3>A first of its kind</h3><p>Combines a battery's instant power with a fuel cell's endless generation — a class of device that didn't exist before.</p></div>
+      </div>
+    </div></div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap"><div class="sec-inner">
+      <div class="head-block"><div class="eyebrow">At a glance</div><h2>The essentials.</h2></div>
+      <div class="spec">
+        <div class="specrow"><div class="sk">What it is</div><div class="sv">Fuel cell + battery buffer + intelligent charge-transfer regulator <span>(QXR).</span></div></div>
+        <div class="specrow"><div class="sk">Continuous power</div><div class="sv">Up to 1.7 kW steady per blade <span>(≈41 kWh/day).</span></div></div>
+        <div class="specrow"><div class="sk">Power-on-demand</div><div class="sv">Up to 6 kW for ~1 hour <span>— handles surges like AC startup.</span></div></div>
+        <div class="specrow"><div class="sk">Efficiency held</div><div class="sv">Fuel cell stays at ~85% under any load <span>(vs dropping to ~32% on direct drive).</span></div></div>
+        <div class="specrow"><div class="sk">Behavior</div><div class="sv">Self-recharging <span>— steady-state, power-on-demand, and restore modes.</span></div></div>
+        <div class="specrow"><div class="sk">Category</div><div class="sv">Not a fuel cell, not a battery <span>— a new class.</span></div></div>
+      </div>
+    </div></div>
+  </section>
+
+  <section class="sec" style="background:var(--fill-2);">
+    <div class="wrap"><div class="sec-inner">
+      <div class="head-block"><div class="eyebrow">Where it fits</div><h2>One part of the whole platform.</h2></div>
+      <div class="locator">
+        <a class="loc" href="#" data-go="pem"><div class="ln">01</div><h4>PEM+ Membrane</h4></a>
+        <a class="loc" href="#" data-go="afc"><div class="ln">02</div><h4>Advanced Fuel Cell</h4></a>
+        <a class="loc here" href="#" data-go="ibfc"><div class="ln">03</div><h4>Intelligent Buffered Fuel Cell</h4></a>
+        <a class="loc" href="#" data-go="ebank"><div class="ln">04</div><h4>CoolEnergy™ Energy Bank</h4></a>
+      </div>
+      <div class="subnav">
+        <a href="#" data-go="afc">← Advanced Fuel Cell</a>
+        <a href="#" data-go="ebank">CoolEnergy™ Energy Bank →</a>
+      </div>
+    </div></div>
+  </section>
+
+</div><!-- /product 03 -->
+
+<!-- ============================================================= -->
+<!-- ========= VIEW: PRODUCT 04 — COOLENERGY ENERGY BANK ======== -->
+<!-- ============================================================= -->
+<div class="stage" data-opt="ebank">
+
+  <section class="sec">
+    <div class="wrap">
+      <div class="sub-hero">
+        <div>
+          <div class="crumb"><a href="#" data-go="home">Technology</a> <span>/</span> <span style="color:var(--ink-2);">CoolEnergy™ Energy Bank</span></div>
+          <div class="eyebrow" style="margin:18px 0 4px;">The system · all three, productized</div>
+          <h1>CoolEnergy™ Energy Bank.</h1>
+          <p class="lead" style="margin-top:18px;">The whole platform in one cabinet — making hydrogen from solar, storing it safely as a solid, and turning it back into clean power around the clock.</p>
+        </div>
+        <div class="hero-visual imgbox" style="min-height:300px;">
+          <span>PRODUCT HERO ILLUSTRATION<br>isometric of the Energy Bank cabinet<br>(water-heater sized) — cutaway showing<br>PowerBlades, solid-state H₂ store,<br>and control electronics</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" style="background:var(--fill-2);">
+    <div class="wrap"><div class="sec-inner">
+      <div class="head-block" style="max-width:74ch;">
+        <div class="eyebrow">Why it matters</div>
+        <h2>Clean power is only useful if it's there 24/7.</h2>
+        <p class="lead" style="margin-top:16px;">Solar stops at night, and batteries run down in hours at a steep cost per kilowatt-hour. To run a building — or a data center — you need power that never quits, without a grid connection or a generator.</p>
+      </div>
+      <div class="wide-visual imgbox"><span>COMPARISON — one Energy Bank cabinet beside three Tesla Powerwalls: size, weight, cost, and continuous-power callouts (wide)</span></div>
+    </div></div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap"><div class="sec-inner">
+      <div class="head-block">
+        <div class="eyebrow">How it works</div>
+        <h2>Make it, store it, use it — on a loop.</h2>
+        <p style="margin-top:14px;">One simple cycle, running around the clock.</p>
+      </div>
+      <div class="howacc">
+        <div class="howacc-list">
+          <div class="acc-item open">
+            <button class="acc-head" type="button"><span class="acc-title">Make</span><span class="acc-sign">−</span></button>
+            <div class="acc-body"><p>Solar panels and water make hydrogen on-site — your own fuel, produced from sunlight.</p></div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-head" type="button"><span class="acc-title">Store</span><span class="acc-sign">+</span></button>
+            <div class="acc-body"><p>The hydrogen is stored safely as a solid at low pressure — no high-pressure tanks, no explosion risk, ready whenever you need it.</p></div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-head" type="button"><span class="acc-title">Use</span><span class="acc-sign">+</span></button>
+            <div class="acc-body"><p>Whenever power is needed, the Energy Bank converts hydrogen back to clean electricity — 24/7, rain or shine.</p></div>
+          </div>
+        </div>
+        <div class="howacc-visual">
+          <div class="acc-vis imgbox on"><span>STEP 1 — solar panels and water<br>producing hydrogen on-site</span></div>
+          <div class="acc-vis imgbox"><span>STEP 2 — hydrogen stored as a solid at<br>low pressure (no explosion risk)</span></div>
+          <div class="acc-vis imgbox"><span>STEP 3 — hydrogen converted back to<br>clean electricity, 24/7</span></div>
+        </div>
+      </div>
+    </div></div>
+  </section>
+
+  <section class="sec" style="background:var(--fill-2);">
+    <div class="wrap"><div class="sec-inner">
+      <div class="head-block"><div class="eyebrow">What makes it different</div><h2>One unit does the work of many.</h2></div>
+      <div class="grid3">
+        <div class="card"><div class="kicker-mark">Economics</div><h3>A fraction of the cost</h3><p>One Energy Bank can replace three-plus Tesla Powerwalls — and after solar payback, the recurring energy cost approaches $0/kWh.</p></div>
+        <div class="card"><div class="kicker-mark">Endurance</div><h3>Days, not hours</h3><p>Unlike a battery that empties, it runs continuously — one hydrogen canister powers a home or office (HVAC included) for a full day. Add more for more days.</p></div>
+        <div class="card"><div class="kicker-mark">Scale</div><h3>Building to data center</h3><p>The same architecture scales from a wall-mounted cabinet to microgrid racks (120 kW) and multi-megawatt PowerStacks for AI data centers.</p></div>
+      </div>
+    </div></div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap"><div class="sec-inner">
+      <div class="head-block"><div class="eyebrow">At a glance</div><h2>The essentials.</h2></div>
+      <div class="spec">
+        <div class="specrow"><div class="sk">What it is</div><div class="sv">The complete on-site system <span>— generate, store as solid-state hydrogen, and use power 24/7.</span></div></div>
+        <div class="specrow"><div class="sk">Power options</div><div class="sv">6 kW (40 kWh/day) or 12 kW (80 kWh/day) <span>per unit.</span></div></div>
+        <div class="specrow"><div class="sk">Continuous / on-demand</div><div class="sv">2–4 kW continuous <span>· 6–12 kW power-on-demand.</span></div></div>
+        <div class="specrow"><div class="sk">Efficiency</div><div class="sv">85%, running near room temperature <span>(~50°C).</span></div></div>
+        <div class="specrow"><div class="sk">Storage</div><div class="sv">Solid-state hydrogen at low pressure <span>— no explosion risk; ~1 day of power per kg H₂.</span></div></div>
+        <div class="specrow"><div class="sk">Economics</div><div class="sv">≈$24k unit replaces ≈$78k of Tesla Powerwalls <span>· ~$0/kWh recurring after solar payback.</span></div></div>
+        <div class="specrow"><div class="sk">Scales to</div><div class="sv">120 kW microgrid racks <span>· multi-megawatt PowerStacks for data centers.</span></div></div>
+      </div>
+    </div></div>
+  </section>
+
+  <section class="sec" style="background:var(--fill-2);">
+    <div class="wrap"><div class="sec-inner">
+      <div class="head-block"><div class="eyebrow">Where it fits</div><h2>The three innovations, together.</h2></div>
+      <div class="locator">
+        <a class="loc" href="#" data-go="pem"><div class="ln">01</div><h4>PEM+ Membrane</h4></a>
+        <a class="loc" href="#" data-go="afc"><div class="ln">02</div><h4>Advanced Fuel Cell</h4></a>
+        <a class="loc" href="#" data-go="ibfc"><div class="ln">03</div><h4>Intelligent Buffered Fuel Cell</h4></a>
+        <a class="loc here" href="#" data-go="ebank"><div class="ln">04</div><h4>CoolEnergy™ Energy Bank</h4></a>
+      </div>
+      <div class="subnav">
+        <a href="#" data-go="ibfc">← Intelligent Buffered Fuel Cell</a>
+        <a href="#" data-go="home">Platform overview →</a>
+      </div>
+    </div></div>
+  </section>
+
+</div><!-- /product 04 -->
+
+<!-- ============================================================= -->
+<!-- ============ VIEW: ABOUT ==================================== -->
+<!-- ============================================================= -->
+<div class="stage" data-opt="about">
+
+  <!-- HERO -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="about-hero">
+        <div>
+          <div class="crumb"><a href="#" data-go="home">Home</a> <span>/</span> <span style="color:var(--ink-2);">About</span></div>
+          <div class="eyebrow" style="margin:18px 0 4px;">About ARCK Energy</div>
+          <h1>Building the end of grid dependence.</h1>
+          <p class="lead" style="margin-top:18px;">ARCK Energy is a Silicon Valley clean-energy company. We set out to solve the two problems that have held hydrogen back — storing it safely and using it efficiently — and turned the result into a platform that delivers clean, continuous power anywhere.</p>
+        </div>
+        <div class="hero-visual imgbox" style="min-height:300px;">
+          <span>COMPANY HERO ILLUSTRATION<br>the ARCK vision — energy autonomy<br>at every scale (the expansive<br>"Future + Natural" composition)</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MISSION & VISION -->
+  <section class="sec" id="mission" style="background:var(--fill-2);">
+    <div class="wrap"><div class="sec-inner">
+      <div class="mv">
+        <div class="mv-col">
+          <div class="eyebrow">Our mission</div>
+          <div class="mv-statement">End grid dependence — and make clean, continuous power the default, not a privilege.</div>
+          <p>We engineer a hydrogen fuel-cell platform that runs cool, costs a fraction of the grid, and never stops — so homes, businesses, and data centers can power themselves, affordably and without emissions.</p>
+        </div>
+        <div class="mv-col">
+          <div class="eyebrow">Our vision</div>
+          <div class="mv-statement">A world that powers itself — pollution-free, outage-free, and free of the grid.</div>
+          <p>From a single rooftop to a hyperscale data center: energy autonomy at every scale — clean power, generated where it's used and owned by the people who use it.</p>
+        </div>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- TIMELINE -->
+  <section class="sec" id="timeline">
+    <div class="wrap"><div class="sec-inner">
+      <div class="head-block"><div class="eyebrow">Our journey</div><h2>From a hard problem to a shipping platform.</h2></div>
+      <div class="vtimeline">
+        <div class="vt"><div class="vt-when">Founded</div><div class="vt-body"><h3>Started in Silicon Valley</h3><p>ARCK is founded to crack hydrogen's two hardest problems — storing it and using it efficiently. Largely self-funded, with $5M deployed into R&D and intellectual property.</p></div></div>
+        <div class="vt"><div class="vt-when">R&D</div><div class="vt-body"><h3>A deep patent portfolio</h3><p>The team builds out its IP across all three core innovations, filing more than 2,300 pages of patents internationally.</p></div></div>
+        <div class="vt"><div class="vt-when">Validation</div><div class="vt-body"><h3>Independently proven</h3><p>The technology is validated internally, independently evaluated by a U.S. university, and assessed by prospective buyers in Japan, South Korea, and Taiwan.</p></div></div>
+        <div class="vt"><div class="vt-when">First product</div><div class="vt-body"><h3>EnergyCube™ released</h3><p>After extensive reliability, performance, and durability testing, ARCK ships its first product.</p></div></div>
+        <div class="vt"><div class="vt-when">2026</div><div class="vt-body"><h3>PowerBlade™ pilot</h3><p>ARCK advances its go-to-market platform into pilot deployments.</p></div></div>
+        <div class="vt"><div class="vt-when">Q1 2027</div><div class="vt-body"><h3>Commercial launch</h3><p>Direct system sales begin, using modular manufacturing in repurposed, fully-depreciated facilities to keep capital needs low.</p></div></div>
+        <div class="vt"><div class="vt-when">2027 →</div><div class="vt-body"><h3>Scaling up</h3><p>Cash-flow positive by Q2 2027, then AI-managed microgrids and, longer term, capacity agreements with enterprise and AI data-center customers.</p></div></div>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- TEAM -->
+  <section class="sec" id="team" style="background:var(--fill-2);">
+    <div class="wrap"><div class="sec-inner">
+      <div class="head-block"><div class="eyebrow">Leadership</div><h2>The people behind the science.</h2><p>A founding team spanning hydrogen, power electronics, intellectual property, manufacturing, and commercialization.</p></div>
+      <div class="team">
+        <div class="member"><div class="photo imgbox"><span>headshot</span></div><div class="minfo"><div class="mname">Ahmad Qazi</div><div class="mrole">Founder &amp; CEO</div><p class="mbio">Technology entrepreneur and finance executive with 16+ years leading global solar innovation and multinational operations — across corporate finance, advanced energy, and manufacturing.</p></div></div>
+        <div class="member"><div class="photo imgbox"><span>headshot</span></div><div class="minfo"><div class="mname">Richard K. Williams</div><div class="mrole">Chief Technology Officer</div><p class="mbio">Pioneering semiconductor inventor of the trench power MOSFET and serial founder, with 600+ patents shaping global power electronics, mobile devices, and next-generation hydrogen energy.</p></div></div>
+        <div class="member"><div class="photo imgbox"><span>headshot</span></div><div class="minfo"><div class="mname">Chris Scott Graham</div><div class="mrole">Director of Legal Affairs</div><p class="mbio">Silicon Valley tech, IP, and corporate attorney with 40+ years' experience — founding managing partner at Oppenheimer Wolff &amp; Donnelly and Dechert LLP, with 50+ verdicts and 100+ arbitrations.</p></div></div>
+        <div class="member"><div class="photo imgbox"><span>headshot</span></div><div class="minfo"><div class="mname">Ken Lin</div><div class="mrole">Director of Operations</div><p class="mbio">Global manufacturing and operations leader with 39+ years across semiconductors, medical devices, power electronics, and fuel cells — spanning Taiwan, Hong Kong, China, and the US.</p></div></div>
+        <div class="member"><div class="photo imgbox"><span>headshot</span></div><div class="minfo"><div class="mname">Jass Aulakh</div><div class="mrole">VP, Business Development</div><p class="mbio">Business development executive with 20+ years driving strategic partnerships, market expansion, and commercial growth.</p></div></div>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="sec" id="contact">
+    <div class="wrap"><div class="sec-inner">
+      <div class="contact">
+        <div>
+          <div class="eyebrow">Get in touch</div>
+          <h2>Let's talk.</h2>
+          <p class="lead" style="margin-top:16px;">Whether you're interested in the technology or the opportunity behind it, we'd be glad to walk you through it.</p>
+        </div>
+        <div class="contact-detail">
+          <div class="cd-row"><div class="ck">Inquiries</div><div class="cv"><span class="ph">[ add contact email ]</span></div></div>
+          <div class="cd-row"><div class="ck">Location</div><div class="cv">Silicon Valley, California</div></div>
+          <div class="cd-row"><div class="ck">Manufacturing</div><div class="cv">In partnership with Soleeva Energy</div></div>
+        </div>
+      </div>
+    </div></div>
+  </section>
+
+</div><!-- /view: about -->
+
+<!-- ============ SHARED FOOTER ============ -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-inner">
+      <div>
+        <a class="brand" href="#" data-go="home" style="margin-bottom:14px;">
+          <div class="mono-mark">ARCK</div>
+          <span class="name">ARCK Energy</span>
+        </a>
+        <p>The end of grid dependence.</p>
+      </div>
+      <div class="col">
+        <h4>Technology</h4>
+        <a href="#" data-go="pem">PEM+ Membrane</a>
+        <a href="#" data-go="afc">Advanced Fuel Cell</a>
+        <a href="#" data-go="ibfc">Intelligent Buffered Fuel Cell</a>
+        <a href="#" data-go="ebank">CoolEnergy™ Energy Bank</a>
+      </div>
+      <div class="col">
+        <h4>About</h4>
+        <a href="#" data-go="about" data-scroll="mission">Mission &amp; vision</a>
+        <a href="#" data-go="about" data-scroll="timeline">Our journey</a>
+        <a href="#" data-go="about" data-scroll="team">Leadership</a>
+        <a href="#" data-go="about" data-scroll="contact">Contact</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 ARCK Energy Inc.</span>
+      <span>Privacy · Terms</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var stages = document.querySelectorAll('.stage');
+    function show(n){
+      stages.forEach(function(s){ s.classList.toggle('on', s.dataset.opt === n); });
+      window.scrollTo({ top: 0, behavior: 'auto' });
+    }
+    document.querySelectorAll('[data-go]').forEach(function(a){
+      a.addEventListener('click', function(e){
+        e.preventDefault();
+        show(a.dataset.go);
+        var anchor = a.dataset.scroll;
+        if(anchor){
+          var el = document.getElementById(anchor);
+          if(el){ requestAnimationFrame(function(){ el.scrollIntoView({behavior:'smooth', block:'start'}); }); }
+        }
+      });
+    });
+    document.querySelectorAll('.howacc').forEach(function(acc){
+      var items = acc.querySelectorAll('.acc-item');
+      var vises = acc.querySelectorAll('.acc-vis');
+      items.forEach(function(item, i){
+        item.querySelector('.acc-head').addEventListener('click', function(){
+          items.forEach(function(it, j){
+            var open = j === i;
+            it.classList.toggle('open', open);
+            var sign = it.querySelector('.acc-sign');
+            if(sign){ sign.textContent = open ? '\u2212' : '+'; }
+          });
+          vises.forEach(function(v, j){ v.classList.toggle('on', j === i); });
+        });
+      });
+    });
+    show('home');
+  })();
+</script>
+</body>
+</html>
